@@ -1,5 +1,7 @@
 # DevZones-Basez
-Belirlediğiniz basez bölgesinde olan oyunculara komutçu ve ya yetkililerin komut kullanmasını sağlar slay(canlıysa)/slap(canlıysa)/respawn(ölüyse)
+Devzones eklentisiyle belirlediğiniz basez bölgesinde olan oyunculara komutçu ve ya yetkililerin komut kullanmasını sağlar
+
+( Slay [Canlı oyuncular] | Slap [Canlı oyuncular] | Respawn [Ölü oyuncular] )
 
 
 # DevZones
