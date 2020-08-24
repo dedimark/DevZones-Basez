@@ -28,6 +28,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_respawnbase", Baserespawn);
 	RegConsoleCmd("sm_slapbase", Baseslap);
 	ConVar_slapdamage = CreateConVar("sm_baseslap_damage", "0", "Basede ki oyuncuya atılan slap hasarı");
+	AutoExecConfig(true, "DevZones-Basez", "ByDexter");
 }
 
 public void Zone_OnClientEntry(int client, const char[] zone)
