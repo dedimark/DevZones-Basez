@@ -1,90 +1,64 @@
 #include <sourcemod>
-#include <sdktools>
-#include <cstrike>
-#include <sdkhooks>
-#include <multicolors>
+#include <sdktools_functions>
 #include <devzones>
-#include <warden>
 
 #pragma semicolon 1
 #pragma newdecls required
 
-int basezone[MAXPLAYERS + 1];
-
-ConVar ConVar_slapdamage;
+ConVar slapdamage;
 
 public Plugin myinfo = 
 {
-	name = "SM DEV ZONES - Basez",
-	author = "ByDexter",
-	description = "",
-	version = "1.0",
+	name = "SM DEV ZONES - Basez", 
+	author = "ByDexter", 
+	description = "", 
+	version = "1.1", 
 	url = "https://steamcommunity.com/id/ByDexterTR/"
 };
 
 public void OnPluginStart()
 {
-	RegConsoleCmd("sm_slaybase", Baseslay);
-	RegConsoleCmd("sm_respawnbase", Baserespawn);
-	RegConsoleCmd("sm_slapbase", Baseslap);
-	ConVar_slapdamage = CreateConVar("sm_baseslap_damage", "0", "Basede ki oyuncuya atılan slap hasarı");
+	LoadTranslations("devzones_basez.phrases");
+	
+	RegAdminCmd("sm_slaybase", Command_slaybase, ADMFLAG_SLAY);
+	RegAdminCmd("sm_slapbase", Command_slapbase, ADMFLAG_SLAY);
+	
+	slapdamage = CreateConVar("sm_baseslap_damage", "50", "Basede ki oyuncuya atılan slap hasarı");
+	
 	AutoExecConfig(true, "DevZones-Basez", "ByDexter");
 }
 
-public void Zone_OnClientEntry(int client, const char[] zone)
+public Action Command_slaybase(int client, int args)
 {
-	if(client < 1 || client > MaxClients || !IsClientInGame(client) ||!IsPlayerAlive(client)) 
-		return;
-		
-	if(StrContains(zone, "basez", false) == 0)
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		basezone[client] = 1;
-	}
-}
-
-public void Zone_OnClientLeave(int client, const char[] zone)
-{
-	if(client < 1 || client > MaxClients || !IsClientInGame(client) ||!IsPlayerAlive(client)) 
-		return;
-		
-	if(StrContains(zone, "basez", false) == 0)
-	{
-		basezone[client] = 0;
-	}
-}
-
-public Action Baseslay(int client, int args)
-{
-	if(warden_iswarden(client) || CheckCommandAccess(client, "sm_slay", ADMFLAG_SLAY, false))
-	{
-		if(basezone[client] == 1 && IsPlayerAlive(client))
+		if (IsValidClient(i) && Zone_IsClientInZone(i, "basez"))
 		{
-			CPrintToChat(client, "{darkred}[ByDexter] {green}Base bölgesinde {default}olduğun için öldün!");
 			ForcePlayerSuicide(client);
 		}
 	}
+	PrintToChatAll("[SM] %N: %T", client, "slaybase");
+	return Plugin_Handled;
 }
 
-public Action Baserespawn(int client, int args)
+public Action Command_slapbase(int client, int args)
 {
-	if(warden_iswarden(client) || CheckCommandAccess(client, "sm_slay", ADMFLAG_SLAY, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if(basezone[client] == 1 && !IsPlayerAlive(client))
+		if (IsValidClient(i) && Zone_IsClientInZone(i, "basez"))
 		{
-			CPrintToChat(client, "{darkred}[ByDexter] {green}Base bölgesinde {default}olduğun için doğdun!");
-			CS_RespawnPlayer(client);
+			SlapPlayer(i, slapdamage.IntValue, true);
 		}
 	}
+	PrintToChatAll("[SM] %N: %T", client, "slapbase");
+	return Plugin_Handled;
 }
 
-public Action Baseslap(int client, int args)
+bool IsValidClient(int client, bool nobots = true)
 {
-	if(warden_iswarden(client) || CheckCommandAccess(client, "sm_slay", ADMFLAG_SLAY, false))
+	if (client <= 0 || client > MaxClients || !IsClientConnected(client) || (nobots && IsFakeClient(client)))
 	{
-		if(basezone[client] == 1 && IsPlayerAlive(client))
-		{
-			CPrintToChat(client, "{darkred}[ByDexter] {green}Base bölgesinde {default}olduğun için tokat yedin!");
-			SlapPlayer(client, ConVar_slapdamage.IntValue, true);
-		}
+		return false;
 	}
-}
+	return IsClientInGame(client);
+} 

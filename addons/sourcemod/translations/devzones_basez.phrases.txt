@@ -1,0 +1,14 @@
+"Phrases"
+{
+	"slaybase"
+	{
+		"en" "Waiting in the base zone were slayed."
+		"tr" "Üs bölgesinde bekleyenler katledildi."
+	}
+	
+	"slapbase"
+	{
+		"en" "Waiting in the base zone were slapped."
+		"tr" "Üs bölgesinde bekleyenler tokatlandı."
+	}
+} 
