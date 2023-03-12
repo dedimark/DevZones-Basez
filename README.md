@@ -1,8 +1,10 @@
 # DevZones-Basez
-Devzones eklentisiyle belirlediğiniz basez bölgesinde olan oyunculara komutçu ve ya yetkililerin komut kullanmasını sağlar
 
-( Slay [Canlı oyuncular] | Slap [Canlı oyuncular] | Respawn [Ölü oyuncular] )
+### EN
+Stand up slap or slay in devzones named basez.
 
+### TR
+Basez adlı devzones da duranları tokatla veya öldür.
 
-# DevZones
+## Required(Gereken): DevZones
 https://github.com/Franc1sco/DevZones
